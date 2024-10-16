@@ -4,7 +4,7 @@ import generateTokenSetCookie from "../utils/generateToken.js";
 
 const signup = async(req, res) => {
     try {
-        const { fullName, username, password, confirmpassword, gender } = req.body;
+        const { username, email, password, confirmpassword, role } = req.body;
 
         if(password != confirmpassword){
             return res.status(400).json({
@@ -24,15 +24,13 @@ const signup = async(req, res) => {
         const salt = await bcryptjs.genSalt(10);
         const hashPassword = await bcryptjs.hash(password, salt);
 
-        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`
-        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`
+        if(!role) role = "user";
 
         const newUser = await new User({
-            fullName, 
             username,
-            password: hashPassword,
-            gender, 
-            profilePic: gender == "male" ? boyProfilePic : girlProfilePic
+            email,
+            password: hashPassword, 
+            role
         })
 
         if(!newUser){
@@ -49,9 +47,9 @@ const signup = async(req, res) => {
 
         return res.status(201).json({
             _id: newUser._id,
-            fullName: newUser.fullName,
             username: newUser.username,
-            profilePic: newUser.profilePic
+            email: newUser.email,
+            role: newUser.role
         });
          
     } catch (error) {
@@ -75,10 +73,10 @@ const login = async(req, res) => {
 		generateTokenSetCookie(user._id, res);
 
 		return res.status(200).json({
-			_id: user._id,
-			fullName: user.fullName,
-			username: user.username,
-			profilePic: user.profilePic,
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            role: user.role
 		});
 
 	} catch (error) {

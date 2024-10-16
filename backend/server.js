@@ -2,8 +2,11 @@ import express from "express"
 import dotenv from "dotenv"
 
 import authRoutes from "./routes/auth.routes.js"
-import messageRoutes from "./routes/message.routes.js"
-import userRoutes from "./routes/user.routes.js"
+import centreRoutes from "./routes/centre.routes.js"
+import sportRoutes from "./routes/sport.routes.js"
+import courtRoutes from "./routes/court.routes.js"
+import bookingRoutes from "./routes/booking.routes.js"
+import userRoutes from "./routes/booking.routes.js"
 import connectDB from "./db/connect.js";
 
 import cookieParser from "cookie-parser";
@@ -21,8 +24,12 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/auth", authRoutes)
-app.use("/api/messages", messageRoutes)
+app.use("/api/centers", centreRoutes)
+app.use("/api/centers/sports", sportRoutes)
+app.use("/api/sports/courts", courtRoutes)
+app.use("/api/bookings", bookingRoutes)
 app.use("/api/users", userRoutes)
+
 
 app.listen(PORT, () => {
     connectDB();

@@ -30,4 +30,22 @@ const protectRoute = async (req, res, next) => {
 	}
 };
 
-export default protectRoute;
+const isCustomer = (req, res, next) => {
+    if (req.user && req.user.role === "user") {
+        next();  // Proceed if the user has the role "user"
+    } else {
+        return res.status(403).json({ error: "Forbidden - You do not have permission to access this resource" });
+    }
+};
+
+const isManager = (req, res, next) => {
+    if (req.user && req.user.role === "manager") {
+        next();  // Proceed if the user has the role "manager"
+    } else {
+        return res.status(403).json({ error: "Forbidden - You do not have permission to access this resource" });
+    }
+};
+
+
+
+export { protectRoute, isCustomer, isManager};
